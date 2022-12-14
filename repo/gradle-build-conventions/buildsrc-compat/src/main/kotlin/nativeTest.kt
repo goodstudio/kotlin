@@ -4,6 +4,7 @@ import org.gradle.api.Project
 import org.gradle.api.artifacts.Configuration
 import org.gradle.api.tasks.testing.Test
 import org.gradle.kotlin.dsl.project
+import org.jetbrains.kotlin.konan.target.HostManager
 import java.io.File
 
 private enum class TestProperty(shortName: String) {
@@ -26,7 +27,8 @@ private enum class TestProperty(shortName: String) {
     CACHE_MODE("cacheMode"),
     EXECUTION_TIMEOUT("executionTimeout"),
     SANITIZER("sanitizer"),
-    TEAMCITY("teamcity");
+    TEAMCITY("teamcity"),
+    XCTEST_FRAMEWORK("xctest");
 
     val fullName = "kotlin.internal.native.test.$shortName"
 }
@@ -95,6 +97,7 @@ fun Project.nativeTest(
     customCompilerDependencies: List<Configuration> = emptyList(),
     customTestDependencies: List<Configuration> = emptyList(),
     compilerPluginDependencies: List<Configuration> = emptyList(),
+    xcTestRunner: Boolean = false,
     body: Test.() -> Unit = {},
 ) = projectTest(
     taskName,
@@ -173,9 +176,40 @@ fun Project.nativeTest(
                 lazyClassPath { compilerPluginDependencies.flatMapTo(this) { it.files } }
             }
 
+            val xcTestConfiguration = if (xcTestRunner) {
+                configurations.detachedConfiguration(
+                    dependencies.project(path = ":kotlin-native:utilities:xctest-runner", configuration = "XCTestRunnerArtifacts")
+                )
+            } else null
+
             computeLazy(CUSTOM_KLIBS) {
+                val testTarget = readFromGradle(TEST_TARGET) ?: HostManager.hostName
+                val xcTestTargetDependencies = xcTestConfiguration?.run {
+                    dependsOn(this)
+
+                    // Resolve artifacts and filter them by target
+                    resolvedConfiguration
+                        .resolvedArtifacts
+                        .filter { it.classifier == testTarget }
+                }
                 customTestDependencies.forEach(::dependsOn)
-                lazyClassPath { customTestDependencies.flatMapTo(this) { it.files } }
+                lazyClassPath {
+                    customTestDependencies.flatMapTo(this) { it.files }
+                    xcTestTargetDependencies?.mapTo(this) { it.file }
+                }
+            }
+
+            computePrivate(XCTEST_FRAMEWORK) {
+                val testTarget = readFromGradle(TEST_TARGET) ?: HostManager.hostName
+                // Set XCTest.framework location (Developer Frameworks directory)
+                xcTestConfiguration?.run {
+                    resolvedConfiguration
+                        .resolvedArtifacts
+                        .filter { it.classifier == "${testTarget}Frameworks" }
+                        .map { it.file }
+                        .singleOrNull()
+                        ?.absolutePath
+                } ?: ""
             }
 
             // Pass Gradle properties as JVM properties so test process can read them.

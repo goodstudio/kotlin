@@ -140,6 +140,7 @@ fun Project.configureKotlinCompilationOptions() {
             ":kotlin-dom-api-compat",
             ":kotlin-test:kotlin-test-wasm-js",
             ":kotlin-test:kotlin-test-wasm-wasi",
+            ":kotlin-native:utilities:xctest-runner" // With 2.0 fails with KT-63048
         )
 
         tasks.withType<org.jetbrains.kotlin.gradle.dsl.KotlinCompile<*>>().configureEach {
@@ -169,9 +170,14 @@ fun Project.configureKotlinCompilationOptions() {
                 }
 
             // Workaround to avoid remote build cache misses due to absolute paths in relativePathBaseArg
-            doFirst {
-                if (relativePathBaseArg != null) {
-                    kotlinOptions.freeCompilerArgs += relativePathBaseArg
+            if (project.path != ":kotlin-native:utilities:xctest-runner") {
+                // FIXME: KGP is used in xctest-runner project and this setting fails with
+                //  Execution failed for task ':kotlin-native:utilities:xctest-runner:compileKotlinIos_arm64'.
+                //  > The value for property 'freeCompilerArgs' is final and cannot be changed any further.
+                doFirst {
+                    if (relativePathBaseArg != null) {
+                        kotlinOptions.freeCompilerArgs += relativePathBaseArg
+                    }
                 }
             }
         }
