@@ -880,6 +880,15 @@ private fun StringBuilder.renderAsAnnotationArgument(irElement: IrElement?, rend
                 renderAsAnnotationArgument(it, renderer, options)
             }
         }
+        is IrGetEnumValue -> {
+            val className = irElement.type.classOrFail.owner.classId?.shortClassName
+            val entryName = irElement.symbol.owner.name
+            append("$className.$entryName")
+        }
+        is IrClassReference -> {
+            val className = irElement.classType.classOrFail.owner.name
+            append("$className::class")
+        }
         else -> if (renderer != null) {
             append(irElement.accept(renderer, null))
         } else {
