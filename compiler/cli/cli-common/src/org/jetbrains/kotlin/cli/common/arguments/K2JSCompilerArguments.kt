@@ -634,16 +634,6 @@ In combination with '-meta-info', this generates both IR and pre-IR versions of 
         }
 
     @Argument(
-        value = "-Xforce-deprecated-legacy-compiler-usage",
-        description = "This flag is used only for our inner infrastructure. It will soon be removed, so it's no longer safe to use."
-    )
-    var forceDeprecatedLegacyCompilerUsage = false
-        set(value) {
-            checkFrozen()
-            field = value
-        }
-
-    @Argument(
         value = "-Xoptimize-generated-js",
         description = "Perform additional optimizations on the generated JS code."
     )
