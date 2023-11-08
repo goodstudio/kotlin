@@ -35,18 +35,6 @@ class K2JSCompilerArguments : CommonCompilerArguments() {
             field = if (value.isNullOrEmpty()) null else value
         }
 
-    @GradleOption(
-        value = DefaultValue.BOOLEAN_TRUE_DEFAULT,
-        gradleInputType = GradleInputTypes.INPUT,
-        shouldGenerateDeprecatedKotlinOptions = true,
-    )
-    @Argument(value = "-no-stdlib", description = "Don't automatically include the default Kotlin/JS stdlib in compilation dependencies.")
-    var noStdlib = false
-        set(value) {
-            checkFrozen()
-            field = value
-        }
-
     @Argument(
             value = "-libraries",
             valueDescription = "<path>",
@@ -131,18 +119,6 @@ class K2JSCompilerArguments : CommonCompilerArguments() {
         }
 
     @GradleOption(
-        value = DefaultValue.BOOLEAN_TRUE_DEFAULT,
-        gradleInputType = GradleInputTypes.INPUT,
-        shouldGenerateDeprecatedKotlinOptions = true,
-    )
-    @Argument(value = "-meta-info", description = "Generate .meta.js and .kjsm files with metadata. Use this to create a library.")
-    var metaInfo = false
-        set(value) {
-            checkFrozen()
-            field = value
-        }
-
-    @GradleOption(
         value = DefaultValue.JS_ECMA_VERSIONS,
         gradleInputType = GradleInputTypes.INPUT,
         shouldGenerateDeprecatedKotlinOptions = true,
@@ -192,28 +168,6 @@ class K2JSCompilerArguments : CommonCompilerArguments() {
         description = "Specify whether the 'main' function should be called upon execution."
     )
     var main: String? = null
-        set(value) {
-            checkFrozen()
-            field = if (value.isNullOrEmpty()) null else value
-        }
-
-    @Argument(
-            value = "-output-prefix",
-            valueDescription = "<path>",
-            description = "Add the content of the specified file to the beginning of the output file."
-    )
-    var outputPrefix: String? = null
-        set(value) {
-            checkFrozen()
-            field = if (value.isNullOrEmpty()) null else value
-        }
-
-    @Argument(
-            value = "-output-postfix",
-            valueDescription = "<path>",
-            description = "Add the content of the specified file to the end of the output file."
-    )
-    var outputPostfix: String? = null
         set(value) {
             checkFrozen()
             field = if (value.isNullOrEmpty()) null else value
@@ -532,13 +486,6 @@ In combination with '-meta-info', this generates both IR and pre-IR versions of 
             field = value
         }
 
-    @Argument(value = "-Xmetadata-only", description = "Generate .meta.js and .kjsm files only.")
-    var metadataOnly = false
-        set(value) {
-            checkFrozen()
-            field = value
-        }
-
     @Argument(value = "-Xenable-js-scripting", description = "Enable experimental support for .kts files using K/JS (with '-Xir' only).")
     var enableJsScripting = false
         set(value) {
@@ -701,9 +648,6 @@ In combination with '-meta-info', this generates both IR and pre-IR versions of 
 
     override fun copyOf(): Freezable = copyK2JSCompilerArguments(this, K2JSCompilerArguments())
 }
-
-fun K2JSCompilerArguments.isPreIrBackendDisabled(): Boolean =
-    irOnly || irProduceJs || irProduceKlibFile || irBuildCache || useK2
 
 fun K2JSCompilerArguments.isIrBackendEnabled(): Boolean =
     irProduceKlibDir || irProduceJs || irProduceKlibFile || wasm || irBuildCache || useK2

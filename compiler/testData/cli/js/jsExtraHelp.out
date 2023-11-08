@@ -41,7 +41,6 @@ where advanced options include:
   -Xir-safe-external-boolean Wrap access to external 'Boolean' properties with an explicit conversion to 'Boolean'.
   -Xir-safe-external-boolean-diagnostic={log|exception}
                              Enable runtime diagnostics when accessing external 'Boolean' properties.
-  -Xmetadata-only            Generate .meta.js and .kjsm files only.
   -Xoptimize-generated-js    Perform additional optimizations on the generated JS code.
   -Xpartial-linkage-loglevel={info|warning|error}
                              Define the compile-time log level for partial linkage.
