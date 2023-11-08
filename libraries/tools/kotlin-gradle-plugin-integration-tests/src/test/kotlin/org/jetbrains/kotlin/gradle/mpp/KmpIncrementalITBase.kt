@@ -11,6 +11,7 @@ import org.gradle.util.GradleVersion
 import org.jetbrains.kotlin.gradle.testbase.*
 import org.jetbrains.kotlin.gradle.testbase.relativizeTo
 import java.nio.file.Path
+import java.util.concurrent.atomic.AtomicInteger
 import kotlin.io.path.appendText
 
 abstract class KmpIncrementalITBase : KGPBaseTest() {
@@ -38,10 +39,13 @@ abstract class KmpIncrementalITBase : KGPBaseTest() {
         )
     }
 
-    protected open fun TestProject.touchAndGet(subproject: String, srcDir: String, name: String): Path {
-        val path = subProject(subproject).kotlinSourcesDir(srcDir).resolve(name)
-        path.appendText("private val nothingMuch = 24")
-        return path
+    protected fun TestProject.resolvePath(subproject: String, srcDir: String, name: String): Path {
+        return subProject(subproject).kotlinSourcesDir(srcDir).resolve(name)
+    }
+
+    protected fun Path.addPrivateVal(): Path {
+        this@addPrivateVal.appendText("private val nothingMuch${changeCounter.incrementAndGet()} = 24")
+        return this@addPrivateVal
     }
 
     protected open fun BuildResult.assertSuccessOrUTD(allTasks: Set<String>, executedTasks: Set<String>) {
@@ -60,5 +64,9 @@ abstract class KmpIncrementalITBase : KGPBaseTest() {
             }
             assertions()
         }
+    }
+
+    companion object {
+        private val changeCounter = AtomicInteger(0)
     }
 }
