@@ -46,6 +46,17 @@ internal fun FirMemberDeclaration.isEffectivelyFinal(context: CheckerContext): B
     return containingClass.isFinal
 }
 
+// TODO: consider unifying with the version above via symbol- or fir-based API
+internal fun FirCallableSymbol<*>.isEffectivelyFinal(declaration: FirClassLikeSymbol<*>?): Boolean {
+    if (this.isFinal) return true
+    val containingClass = declaration ?: return true
+    if ((containingClass as? FirClassSymbol<*>)?.isEnumClass == true) {
+        // Enum class has enum entries and hence is not considered final.
+        return false
+    }
+    return containingClass.isFinal
+}
+
 internal fun FirMemberDeclaration.isEffectivelyExpect(
     containingClass: FirClass?,
     context: CheckerContext,
