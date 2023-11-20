@@ -20,8 +20,7 @@ import java.util.regex.Pattern;
 @TestMetadata("jps/jps-plugin/testData/incremental/mpp/allPlatforms")
 @TestDataPath("$PROJECT_ROOT")
 @RunWith(JUnit3RunnerWithInners.class)
-public class IncrementalK1JsLegacyMultiplatformJsCompilerRunnerTestGenerated extends
-                                                                             AbstractIncrementalK1JsKlibMultiplatformJsCompilerRunnerTest {
+public class IncrementalK1JsKlibMultiplatformJsCompilerRunnerTestGenerated extends AbstractIncrementalK1JsKlibMultiplatformJsCompilerRunnerTest {
     private void runTest(String testDataFilePath) throws Exception {
         KotlinTestUtils.runTest(this::doTest, this, testDataFilePath);
     }
