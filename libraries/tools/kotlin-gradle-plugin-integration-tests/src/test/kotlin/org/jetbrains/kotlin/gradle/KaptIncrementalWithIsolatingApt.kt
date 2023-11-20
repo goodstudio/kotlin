@@ -440,7 +440,7 @@ open class KaptIncrementalWithIsolatingApt : KaptIncrementalIT() {
 }
 
 @DisplayName("Kapt incremental tests with isolating apt with disabled precise compilation outputs backup")
-class KaptIncrementalWithIsolatingAptAndPreciseBackup : KaptIncrementalWithIsolatingApt() {
+class KaptIncrementalWithIsolatingAptAndWithoutPreciseBackup : KaptIncrementalWithIsolatingApt() {
     override val defaultBuildOptions = super.defaultBuildOptions.copy(usePreciseOutputsBackup = false, keepIncrementalCompilationCachesInMemory = false)
 }
 

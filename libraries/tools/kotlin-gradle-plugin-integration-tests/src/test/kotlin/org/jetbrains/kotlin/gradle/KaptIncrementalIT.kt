@@ -393,6 +393,6 @@ open class KaptIncrementalIT : KGPBaseTest() {
 }
 
 @DisplayName("Kapt incremental compilation with disabled precise compilation outputs backup")
-class KaptIncrementalWithPreciseBackupIT : KaptIncrementalIT() {
+class KaptIncrementalWithoutPreciseBackupIT : KaptIncrementalIT() {
     override val defaultBuildOptions = super.defaultBuildOptions.copy(usePreciseOutputsBackup = false, keepIncrementalCompilationCachesInMemory = false)
 }
