@@ -26,7 +26,7 @@ external fun foo(<!INLINE_CLASS_IN_EXTERNAL_DECLARATION!>c: SomeIC<!>): <!INLINE
 external fun foo(a: Int, <!INLINE_CLASS_IN_EXTERNAL_DECLARATION!>c: SomeIC<!>): <!INLINE_CLASS_IN_EXTERNAL_DECLARATION!>SomeIC<!>
 
 external fun foo(a: Int, <!INLINE_CLASS_IN_EXTERNAL_DECLARATION!><!FORBIDDEN_VARARG_PARAMETER_TYPE!>vararg<!> args: SomeIC<!>)
-external fun foo(a: Int, <!INLINE_CLASS_IN_EXTERNAL_DECLARATION!>ui: UInt<!>, <!INLINE_CLASS_IN_EXTERNAL_DECLARATION!>vararg args: UInt<!>)
+external fun foo(a: Int, <!INLINE_CLASS_IN_EXTERNAL_DECLARATION!>ui: UInt<!>, <!INLINE_CLASS_IN_EXTERNAL_DECLARATION!>vararg args: <!OPT_IN_USAGE!>UInt<!><!>)
 
 external class CC(
     <!INLINE_CLASS_IN_EXTERNAL_DECLARATION!>a: SomeIC<!>,
