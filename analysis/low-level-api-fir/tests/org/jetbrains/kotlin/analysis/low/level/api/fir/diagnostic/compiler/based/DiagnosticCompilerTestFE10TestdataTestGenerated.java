@@ -23642,6 +23642,12 @@ public class DiagnosticCompilerTestFE10TestdataTestGenerated extends AbstractDia
             }
 
             @Test
+            @TestMetadata("actualTypealiasWithoutExpect.kt")
+            public void testActualTypealiasWithoutExpect() throws Exception {
+                runTest("compiler/testData/diagnostics/tests/multiplatform/actualTypealiasWithoutExpect.kt");
+            }
+
+            @Test
             @TestMetadata("actualTypealias_defaultParamsIncompatibility.kt")
             public void testActualTypealias_defaultParamsIncompatibility() throws Exception {
                 runTest("compiler/testData/diagnostics/tests/multiplatform/actualTypealias_defaultParamsIncompatibility.kt");
@@ -23791,6 +23797,12 @@ public class DiagnosticCompilerTestFE10TestdataTestGenerated extends AbstractDia
             }
 
             @Test
+            @TestMetadata("extraNestedClassOnActualViaActualTypealias.kt")
+            public void testExtraNestedClassOnActualViaActualTypealias() throws Exception {
+                runTest("compiler/testData/diagnostics/tests/multiplatform/extraNestedClassOnActualViaActualTypealias.kt");
+            }
+
+            @Test
             @TestMetadata("headerFunInNonHeaderClass.kt")
             public void testHeaderFunInNonHeaderClass() throws Exception {
                 runTest("compiler/testData/diagnostics/tests/multiplatform/headerFunInNonHeaderClass.kt");
@@ -23890,6 +23902,12 @@ public class DiagnosticCompilerTestFE10TestdataTestGenerated extends AbstractDia
             @TestMetadata("nestedClassViaActualTypealias.kt")
             public void testNestedClassViaActualTypealias() throws Exception {
                 runTest("compiler/testData/diagnostics/tests/multiplatform/nestedClassViaActualTypealias.kt");
+            }
+
+            @Test
+            @TestMetadata("nestedClassViaActualTypealiasIncompatibilities.kt")
+            public void testNestedClassViaActualTypealiasIncompatibilities() throws Exception {
+                runTest("compiler/testData/diagnostics/tests/multiplatform/nestedClassViaActualTypealiasIncompatibilities.kt");
             }
 
             @Test
