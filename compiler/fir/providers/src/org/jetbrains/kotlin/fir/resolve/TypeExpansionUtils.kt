@@ -9,13 +9,20 @@ import org.jetbrains.kotlin.fir.FirSession
 import org.jetbrains.kotlin.fir.declarations.FirClassLikeDeclaration
 import org.jetbrains.kotlin.fir.declarations.FirResolvePhase
 import org.jetbrains.kotlin.fir.declarations.FirTypeAlias
+import org.jetbrains.kotlin.fir.declarations.fullyExpandedClass
 import org.jetbrains.kotlin.fir.declarations.utils.expandedConeType
+import org.jetbrains.kotlin.fir.declarations.utils.isExpect
+import org.jetbrains.kotlin.fir.resolve.providers.getRegularClassSymbolByClassId
+import org.jetbrains.kotlin.fir.resolve.providers.symbolProvider
+import org.jetbrains.kotlin.fir.resolve.providers.toSymbol
 import org.jetbrains.kotlin.fir.resolve.substitution.AbstractConeSubstitutor
+import org.jetbrains.kotlin.fir.symbols.impl.FirRegularClassSymbol
 import org.jetbrains.kotlin.fir.symbols.impl.FirTypeAliasSymbol
 import org.jetbrains.kotlin.fir.symbols.lazyResolveToPhase
 import org.jetbrains.kotlin.fir.types.*
 import org.jetbrains.kotlin.fir.types.impl.ConeClassLikeTypeImpl
 import org.jetbrains.kotlin.fir.types.impl.ConeTypeParameterTypeImpl
+import org.jetbrains.kotlin.name.ClassId
 import org.jetbrains.kotlin.util.WeakPair
 import org.jetbrains.kotlin.util.component1
 import org.jetbrains.kotlin.util.component2
@@ -90,7 +97,11 @@ fun ConeClassLikeType.directExpansionType(
         alias.expandedConeType
     },
 ): ConeClassLikeType? {
-    val typeAliasSymbol = lookupTag.toSymbol(useSiteSession) as? FirTypeAliasSymbol ?: return null
+    val classSymbol = lookupTag.toSymbol(useSiteSession) ?: return null
+    if (classSymbol is FirRegularClassSymbol && classSymbol.isExpect && classSymbol.classId.isNestedClass) {
+        return tryExpandExpectNestedClassActualizedViaTypealias(useSiteSession, classSymbol)
+    }
+    val typeAliasSymbol = classSymbol as? FirTypeAliasSymbol ?: return null
     val typeAlias = typeAliasSymbol.fir
 
     val resultType = expandedConeType(typeAlias)
@@ -100,6 +111,28 @@ fun ConeClassLikeType.directExpansionType(
 
     if (resultType.typeArguments.isEmpty()) return resultType
     return mapTypeAliasArguments(typeAlias, this, resultType, useSiteSession) as? ConeClassLikeType
+}
+
+/**
+ * In case of `expect` nested classes actualized via typealias we can't simply find actual symbol by `expect` `ClassId`
+ * (like we do for top-level classes), because `ClassId` is different.
+ * For example, `expect` class `com/example/ExpectClass.Nested` may have actual with id `real/package/ActualTypeliasTarget.Nested`.
+ * So, we first expand outermost class, and then construct `ClassId` for nested class.
+ */
+private fun tryExpandExpectNestedClassActualizedViaTypealias(
+    useSiteSession: FirSession,
+    expectNestedClassSymbol: FirRegularClassSymbol,
+): ConeClassLikeType? {
+    val expectNestedClassId = expectNestedClassSymbol.classId
+    val expectOutermostClassId = expectNestedClassId.outermostClassId
+    val actualTypealiasSymbol = expectOutermostClassId.toSymbol(useSiteSession) as? FirTypeAliasSymbol ?: return null
+    val actualOutermostClassId = actualTypealiasSymbol.fullyExpandedClass(useSiteSession)?.classId ?: return null
+    val actualNestedClassId = ClassId.fromString(
+        expectNestedClassId.asString().replaceFirst(
+            expectOutermostClassId.asString(), actualOutermostClassId.asString()
+        )
+    )
+    return useSiteSession.symbolProvider.getRegularClassSymbolByClassId(actualNestedClassId)?.defaultType()
 }
 
 private fun ConeClassLikeType.applyNullabilityFrom(
