@@ -63,6 +63,7 @@ object Fe10ObjCExportHeaderGenerator : AbstractObjCExportHeaderGeneratorTest.Obj
             mapper = mapper,
             builtIns = DefaultBuiltIns.Instance,
             local = false,
+            problemCollector = ObjCExportProblemCollector.SILENT,
             configuration = object : ObjCExportNamer.Configuration {
                 override val topLevelNamePrefix: String get() = ""
                 override fun getAdditionalPrefix(module: ModuleDescriptor): String? = null
@@ -82,6 +83,7 @@ object Fe10ObjCExportHeaderGenerator : AbstractObjCExportHeaderGeneratorTest.Obj
             moduleDescriptors = listOf(getModuleDescriptor(disposable, compilerConfiguration, kotlinFiles)),
             mapper = mapper,
             namer = namer,
+            problemCollector = ObjCExportProblemCollector.SILENT,
             objcGenerics = true
         )
     }
@@ -122,9 +124,8 @@ object Fe10ObjCExportHeaderGenerator : AbstractObjCExportHeaderGeneratorTest.Obj
         override fun packageFragmentProviderForModuleInfo(moduleInfo: ModuleInfo): PackageFragmentProvider? = null
 
         private val stdlibModuleDescriptor = KlibFactories.DefaultDeserializedDescriptorFactory.createDescriptor(
-            library = resolveSingleFileKlib(
-                org.jetbrains.kotlin.konan.file.File("$konanHomePath/klib/common/stdlib")
-            ), languageVersionSettings = createLanguageVersionSettings(),
+            library = resolveSingleFileKlib(org.jetbrains.kotlin.konan.file.File("$konanHomePath/klib/common/stdlib")),
+            languageVersionSettings = createLanguageVersionSettings(),
             builtIns = DefaultBuiltIns.Instance,
             storageManager = LockBasedStorageManager.NO_LOCKS,
             packageAccessHandler = null
