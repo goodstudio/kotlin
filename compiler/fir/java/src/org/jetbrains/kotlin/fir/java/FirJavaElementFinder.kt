@@ -44,6 +44,7 @@ import org.jetbrains.kotlin.fir.resolve.transformers.SupertypeComputationSession
 import org.jetbrains.kotlin.fir.symbols.impl.FirClassSymbol
 import org.jetbrains.kotlin.fir.types.*
 import org.jetbrains.kotlin.fir.utils.exceptions.withConeTypeEntry
+import org.jetbrains.kotlin.load.java.structure.impl.JavaFieldImpl
 import org.jetbrains.kotlin.name.*
 import org.jetbrains.kotlin.resolve.jvm.JvmPrimitiveType
 import org.jetbrains.kotlin.resolve.jvm.KotlinFinderMarker
@@ -194,7 +195,7 @@ class FirJavaElementFinder(
 
             override fun getName(): String = firProperty.name.identifier
 
-            override fun getInitializerText(): String? = lazyInitializerText
+            override fun getInitializerText(): String? = if (propertyEvaluator == null) JavaFieldImpl.NOT_YET_EVALUATED_CONST else lazyInitializerText
 
             override fun getType(): TypeInfo {
                 val coneClassLikeType = firProperty.returnTypeRef.coneTypeUnsafe<ConeClassLikeType>()
