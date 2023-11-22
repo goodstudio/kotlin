@@ -27,3 +27,5 @@ projectTest(jUnitMode = JUnitMode.JUnit5) {
     workingDir = rootDir
     useJUnitPlatform()
 }
+
+testsJar()
