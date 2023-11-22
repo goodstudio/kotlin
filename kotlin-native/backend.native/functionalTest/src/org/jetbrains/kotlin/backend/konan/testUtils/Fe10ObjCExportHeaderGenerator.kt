@@ -72,15 +72,21 @@ object Fe10ObjCExportHeaderGenerator : AbstractObjCExportHeaderGeneratorTest.Obj
 
         )
 
+        val environment: KotlinCoreEnvironment = KotlinCoreEnvironment.createForTests(
+            parentDisposable = disposable,
+            initialConfiguration = compilerConfiguration,
+            extensionConfigs = EnvironmentConfigFiles.METADATA_CONFIG_FILES
+        )
+
         val phaseContext = BasicPhaseContext(
-            KonanConfig(MockProjectEx(disposable), compilerConfiguration)
+            KonanConfig(environment.project, compilerConfiguration)
         )
 
         val kotlinFiles = root.walkTopDown().filter { it.isFile }.filter { it.extension == "kt" }.toList()
 
         return ObjCExportHeaderGeneratorImpl(
             context = phaseContext,
-            moduleDescriptors = listOf(getModuleDescriptor(disposable, compilerConfiguration, kotlinFiles)),
+            moduleDescriptors = listOf(getModuleDescriptor(environment, kotlinFiles)),
             mapper = mapper,
             namer = namer,
             problemCollector = ObjCExportProblemCollector.SILENT,
@@ -89,14 +95,8 @@ object Fe10ObjCExportHeaderGenerator : AbstractObjCExportHeaderGeneratorTest.Obj
     }
 
     private fun getModuleDescriptor(
-        testRootDisposable: Disposable, configuration: CompilerConfiguration, kotlinFiles: List<File>
+        environment: KotlinCoreEnvironment, kotlinFiles: List<File>
     ): ModuleDescriptor {
-        val environment: KotlinCoreEnvironment = KotlinCoreEnvironment.createForTests(
-            parentDisposable = testRootDisposable,
-            initialConfiguration = configuration,
-            extensionConfigs = EnvironmentConfigFiles.METADATA_CONFIG_FILES
-        )
-
         val psiFactory = KtPsiFactory(environment.project)
         val kotlinPsiFiles = kotlinFiles.map { file -> psiFactory.createFile(file.name, KtTestUtil.doLoadFile(file)) }
 
