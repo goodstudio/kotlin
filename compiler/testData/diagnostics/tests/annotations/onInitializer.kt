@@ -1,3 +1,4 @@
+// FIR_IDENTICAL
 class A {
     <!WRONG_ANNOTATION_TARGET!>@ann<!> init {}
     <!WRONG_ANNOTATION_TARGET!>@<!UNRESOLVED_REFERENCE!>aaa<!><!> init {}
