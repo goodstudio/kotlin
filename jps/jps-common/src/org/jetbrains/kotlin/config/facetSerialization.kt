@@ -182,9 +182,11 @@ private fun readV2AndLaterConfig(
         productionOutputPath = element.getChild("productionOutputPath")?.let {
             (it.content.firstOrNull() as? Text)?.textTrim?.let(FileUtilRt::toSystemDependentName)
         } ?: (compilerArguments as? K2JSCompilerArguments)?.outputDir
+                ?: (compilerArguments as? K2JSCompilerArguments)?.outputFile
         testOutputPath = element.getChild("testOutputPath")?.let {
             (it.content.firstOrNull() as? Text)?.textTrim?.let(FileUtilRt::toSystemDependentName)
         } ?: (compilerArguments as? K2JSCompilerArguments)?.outputDir
+                ?: (compilerArguments as? K2JSCompilerArguments)?.outputFile
     }
 }
 
