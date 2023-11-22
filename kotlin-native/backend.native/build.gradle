@@ -257,7 +257,7 @@ Configure 'test' task
 TasksKt.projectTest(project)
 tasks {
     test {
-        dependsOn ':dist'
+        dependsOn ':kotlin-native:dist'
         systemProperty("org.jetbrains.kotlin.native.home", distDir.canonicalPath)
         workingDir(rootProject.projectDir)
     }
