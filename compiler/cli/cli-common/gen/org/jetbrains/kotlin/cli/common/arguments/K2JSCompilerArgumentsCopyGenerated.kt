@@ -44,10 +44,12 @@ fun copyK2JSCompilerArguments(from: K2JSCompilerArguments, to: K2JSCompilerArgum
     to.irSafeExternalBooleanDiagnostic = from.irSafeExternalBooleanDiagnostic
     to.libraries = from.libraries
     to.main = from.main
+    to.metaInfo = from.metaInfo
     to.moduleKind = from.moduleKind
     to.moduleName = from.moduleName
     to.optimizeGeneratedJs = from.optimizeGeneratedJs
     to.outputDir = from.outputDir
+    to.outputFile = from.outputFile
     to.partialLinkageLogLevel = from.partialLinkageLogLevel
     to.partialLinkageMode = from.partialLinkageMode
     to.platformArgumentsProviderJsExpression = from.platformArgumentsProviderJsExpression
