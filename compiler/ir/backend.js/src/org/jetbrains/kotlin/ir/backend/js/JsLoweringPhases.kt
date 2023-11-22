@@ -932,6 +932,12 @@ private val inlineObjectsWithPureInitialization = makeIrModulePhase(
     prerequisite = setOf(purifyObjectInstanceGetters)
 )
 
+private val jsStringConcatenationOptimizationLowering = makeIrModulePhase(
+    ::JsStringConcatenationOptimizationLowering,
+    name = "JsStringConcatenationOptimizationLowering",
+    description = "[Optimization] TODO",
+)
+
 val optimizationLoweringList = listOf<SimpleNamedCompilerPhase<JsIrBackendContext, IrModuleFragment, IrModuleFragment>>(
     es6CollectConstructorsWhichNeedBoxParameterLowering,
     es6CollectPrimaryConstructorsWhichCouldBeOptimizedLowering,
@@ -939,7 +945,8 @@ val optimizationLoweringList = listOf<SimpleNamedCompilerPhase<JsIrBackendContex
     es6PrimaryConstructorOptimizationLowering,
     es6PrimaryConstructorUsageOptimizationLowering,
     purifyObjectInstanceGetters,
-    inlineObjectsWithPureInitialization
+    inlineObjectsWithPureInitialization,
+    jsStringConcatenationOptimizationLowering
 )
 
 val jsOptimizationPhases = SameTypeNamedCompilerPhase(

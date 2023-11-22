@@ -22,4 +22,6 @@ object JsStatementOrigins {
     val COROUTINE_SWITCH by IrStatementOriginImpl
     val CLASS_REFERENCE by IrStatementOriginImpl
     val IMPLEMENTATION_DELEGATION_CALL by IrStatementOriginImpl
+
+    val EXPLICIT_TO_STRING_CALL by IrStatementOriginImpl
 }
