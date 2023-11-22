@@ -844,7 +844,6 @@ if (buildProperties.isKotlinNativeEnabled) {
     include ':kotlin-native:Interop:Skia'
     include ':kotlin-native:utilities:basic-utils'
     include ':kotlin-native:utilities:cli-runner'
-    include ':kotlin-native:utilities:xctest-runner'
     include ':kotlin-native:klib'
     include ':kotlin-native:common'
     include ':kotlin-native:runtime'
@@ -854,5 +853,6 @@ if (buildProperties.isKotlinNativeEnabled) {
     include ':kotlin-native:platformLibs'
     include ':kotlin-native:libclangext'
     include ':kotlin-native:backend.native:tests'
-    include ":kotlin-native:prepare:kotlin-native-compiler-embeddable"
+    include 'kotlin-native:prepare:kotlin-native-compiler-embeddable'
+    include ':native:kotlin-test-native-xctest'
 }

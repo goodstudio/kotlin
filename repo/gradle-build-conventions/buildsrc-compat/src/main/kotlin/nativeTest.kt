@@ -64,6 +64,11 @@ private class ComputedTestProperties(private val task: Test) {
         computedProperties += ComputedTestProperty.Normal(property.fullName, value())
     }
 
+    // Do not attempt to read the property from Gradle. Instead, set it based on the lambda return value.
+    fun computeLazyPrivate(property: TestProperty, defaultLazyValue: () -> Lazy<String?>) {
+        computedProperties += ComputedTestProperty.Lazy(property.fullName, defaultLazyValue())
+    }
+
     fun lazyClassPath(builder: MutableList<File>.() -> Unit): Lazy<String?> = lazy(LazyThreadSafetyMode.NONE) {
         buildList(builder).takeIf { it.isNotEmpty() }?.joinToString(File.pathSeparator) { it.absolutePath }
     }
@@ -178,8 +183,10 @@ fun Project.nativeTest(
 
             val xcTestConfiguration = if (xcTestRunner) {
                 configurations.detachedConfiguration(
-                    dependencies.project(path = ":kotlin-native:utilities:xctest-runner", configuration = "XCTestRunnerArtifacts")
-                )
+                    dependencies.project(path = ":native:kotlin-test-native-xctest", configuration = "kotlinTestNativeXCTest")
+                ).apply {
+                    isTransitive = false
+                }
             } else null
 
             computeLazy(CUSTOM_KLIBS) {
@@ -199,17 +206,19 @@ fun Project.nativeTest(
                 }
             }
 
-            computePrivate(XCTEST_FRAMEWORK) {
+            computeLazyPrivate(XCTEST_FRAMEWORK) {
                 val testTarget = readFromGradle(TEST_TARGET) ?: HostManager.hostName
-                // Set XCTest.framework location (Developer Frameworks directory)
-                xcTestConfiguration?.run {
-                    resolvedConfiguration
-                        .resolvedArtifacts
-                        .filter { it.classifier == "${testTarget}Frameworks" }
-                        .map { it.file }
-                        .singleOrNull()
-                        ?.absolutePath
-                } ?: ""
+                lazy {
+                    // Set XCTest.framework location (Developer Frameworks directory)
+                    xcTestConfiguration?.run {
+                        resolvedConfiguration
+                            .resolvedArtifacts
+                            .filter { it.classifier == "${testTarget}Frameworks" }
+                            .map { it.file }
+                            .singleOrNull()
+                            ?.absolutePath
+                    } ?: ""
+                }
             }
 
             // Pass Gradle properties as JVM properties so test process can read them.

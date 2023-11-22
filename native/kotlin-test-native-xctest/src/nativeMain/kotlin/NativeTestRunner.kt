@@ -35,10 +35,8 @@ class XCTestCaseWrapper(invocation: NSInvocation, val testCase: TestCase) : XCTe
         if (ignored) {
             // FIXME: to skip the test XCTSkip() should be used.
             //  But it is not possible to do that due to the KT-43719 and not implemented exception importing.
-            //  For example, `_XCTSkipHandler(testName, 0U, "Test $testName is ignored")` fails with
-            //   Uncaught Kotlin exception: kotlinx.cinterop.ForeignException: _XCTSkipFailureException:: Test skipped
-            //
-            //  So, just don't run the test. It will be seen as passed in XCode, but K/N TestListener should correctly process that.
+            //  For example, _XCTSkipHandler(testName, 0U, "Test $testName is ignored") fails with 'Uncaught Kotlin exception'.
+            //  So, just don't run the test. It will be seen as passed in XCode, but K/N TestListener correctly processes that.
             return
         }
         try {
@@ -135,7 +133,7 @@ class XCTestCaseWrapper(invocation: NSInvocation, val testCase: TestCase) : XCTe
                 cls = this.`class`(),
                 name = selector,
                 imp = imp_implementationWithBlock(this::runner),
-                types = "v@:" // See ObjC' type encodings: v (returns void), @ (id self), : (SEL sel)
+                types = "v@:" // Obj-C type encodings: v (returns void), @ (id self), : (SEL sel)
             )
             check(result) {
                 "Internal error: was unable to add method with selector $selector"

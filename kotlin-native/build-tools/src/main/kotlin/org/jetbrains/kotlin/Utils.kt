@@ -64,10 +64,10 @@ val validPropertiesNames = listOf(
 )
 
 val Project.kotlinNativeDist
-    get() = rootProject.currentKotlinNativeDist
+    get() = rootProject.project(":kotlin-native").currentKotlinNativeDist
 
 val Project.currentKotlinNativeDist
-    get() = file(validPropertiesNames.firstOrNull { hasProperty(it) }?.let { findProperty(it) } ?: "dist")
+    get() = rootProject.file(validPropertiesNames.firstOrNull { hasProperty(it) }?.let { findProperty(it) } ?: "dist")
 
 val kotlinNativeHome
     get() = validPropertiesNames.mapNotNull(System::getProperty).first()
