@@ -332,7 +332,7 @@ class JpsKotlinCompilerRunner {
             irProduceKlibDir = true
             irOnly = true
             commonSources = _commonSources.map { it.path }.toTypedArray()
-            outputDir = _outputFile.path
+            outputDir = _outputFile.parent
             moduleName = _outputFile.nameWithoutExtension
             libraries = _libraries.joinToString(File.pathSeparator)
             friendModules = _friendModules.joinToString(File.pathSeparator)
