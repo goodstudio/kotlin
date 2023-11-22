@@ -1,6 +1,6 @@
 // FIR_DISABLE_LAZY_RESOLVE_CHECKS
 // WITH_STDLIB
-// FIR_DIFFERENCE: KT-53861
+// FIR_IDENTICAL
 // FILE: test.kt
 import kotlinx.serialization.*
 
