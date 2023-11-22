@@ -127,6 +127,7 @@ fun Element.getFacetPlatformByConfigurationElement(): TargetPlatform {
     } ?: JvmPlatforms.defaultJvmPlatform // finally, fallback to the default platform
 }
 
+@Suppress("DEPRECATION")
 private fun readV2AndLaterConfig(
     element: Element,
     argumentReader: (Element, CommonToolArguments) -> Unit = { el, arg -> XmlSerializer.deserializeInto(arg, el) }
