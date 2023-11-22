@@ -16,6 +16,14 @@ class K2JSCompilerArguments : CommonCompilerArguments() {
         @JvmStatic private val serialVersionUID = 0L
     }
 
+    @Deprecated("It is senseless to use with IR compiler. Only for compatibility.")
+    @Argument(value = "-output", valueDescription = "<filepath>", description = "Destination *.js file for the compilation result.")
+    var outputFile: String? = null
+        set(value) {
+            checkFrozen()
+            field = if (value.isNullOrEmpty()) null else value
+        }
+
     @Argument(value = "-ir-output-dir", valueDescription = "<directory>", description = "Destination for generated files.")
     var outputDir: String? = null
         set(value) {
@@ -116,6 +124,14 @@ class K2JSCompilerArguments : CommonCompilerArguments() {
         set(value) {
             checkFrozen()
             field = if (value.isNullOrEmpty()) null else value
+        }
+
+    @Deprecated("It is senseless to use with IR compiler. Only for compatibility.")
+    @Argument(value = "-meta-info", description = "Generate .meta.js and .kjsm files with metadata. Use this to create a library.")
+    var metaInfo = false
+        set(value) {
+            checkFrozen()
+            field = value
         }
 
     @GradleOption(
