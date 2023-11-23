@@ -698,6 +698,7 @@ class Fir2IrDeclarationStorage(
                 check(it is Fir2IrLazyProperty)
             }
 
+            cacheIrPropertySymbols(property, symbols, fakeOverrideOwnerLookupTag)
             return symbols
         }
 
@@ -1084,6 +1085,7 @@ class Fir2IrDeclarationStorage(
                 ).also {
                     check(it is Fir2IrLazySimpleFunction)
                 }
+                cacheIrFunctionSymbol(function, symbol, fakeOverrideOwnerLookupTag)
                 return symbol
             }
         }
