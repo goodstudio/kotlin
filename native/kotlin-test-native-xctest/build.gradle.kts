@@ -35,7 +35,7 @@ fun targetPlatform(target: String): String {
 }
 
 /**
- * Returns a path to the developer frameworks location based on the specified KonanTarget.
+ * Returns a path to the Xcode developer frameworks location based on the specified KonanTarget.
  */
 fun KonanTarget.developerFrameworkPath(): String {
     val platform = when (this) {
@@ -49,7 +49,7 @@ fun KonanTarget.developerFrameworkPath(): String {
 }
 
 /**
- * Registers a task to copy framework to the build directory for the specified KonanTarget.
+ * Registers a task to copy the XCTest framework to the build directory for the specified KonanTarget.
  *
  * @param target The KonanTarget for which the copy framework task should be registered.
  * @return The TaskProvider representing the registered copy framework task.
