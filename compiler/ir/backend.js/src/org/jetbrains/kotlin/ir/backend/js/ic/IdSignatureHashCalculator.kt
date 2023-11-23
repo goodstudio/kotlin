@@ -9,7 +9,6 @@ import org.jetbrains.kotlin.ir.IrElement
 import org.jetbrains.kotlin.ir.declarations.*
 import org.jetbrains.kotlin.ir.expressions.IrCall
 import org.jetbrains.kotlin.ir.expressions.IrFunctionReference
-import org.jetbrains.kotlin.ir.symbols.IrSimpleFunctionSymbol
 import org.jetbrains.kotlin.ir.symbols.IrSymbol
 import org.jetbrains.kotlin.ir.util.IdSignature
 import org.jetbrains.kotlin.ir.util.isFakeOverride
@@ -23,7 +22,7 @@ internal class IdSignatureHashCalculator(private val icHasher: ICHasher) {
     private val idSignatureSources = hashMapOf<IdSignature, IdSignatureSource>()
     private val idSignatureHashes = hashMapOf<IdSignature, ICHash>()
 
-    private val parentAnnotationHashes = hashMapOf<IrAnnotationContainer, ICHash>()
+    private val annotationContainerHashes = hashMapOf<IrSymbolOwner, ICHash>()
     private val constantHashes = hashMapOf<IrProperty, ICHash>()
     private val inlineFunctionFlatHashes = hashMapOf<IrFunction, ICHash>()
 
@@ -34,10 +33,8 @@ internal class IdSignatureHashCalculator(private val icHasher: ICHasher) {
 
     private val inlineFunctionDepends = hashMapOf<IrFunction, InlineFunctionDependencies>()
 
-    private val IrAnnotationContainer.annotationsHash: ICHash
-        get() = parentAnnotationHashes.getOrPut(this) {
-            icHasher.calculateIrAnnotationContainerHash(this)
-        }
+    private val IrSymbolOwner.annotationsHash: ICHash
+        get() = annotationContainerHashes.getOrPut(this) { calculateAnnotationHash() }
 
     private val IrProperty.constantHash: ICHash
         get() = constantHashes.getOrPut(this) {
@@ -90,18 +87,13 @@ internal class IdSignatureHashCalculator(private val icHasher: ICHasher) {
 
     private operator fun ICHash.plus(other: ICHash) = ICHash(hash.combineWith(other.hash))
 
-    private fun IrSymbol.calculateAnnotationHash(): ICHash {
-        var symbolAnnotationsHash = ICHash()
-        var parentDeclaration = (owner as? IrDeclaration)?.parent
+    private fun IrSymbolOwner.calculateAnnotationHash(): ICHash {
+        val annotationContainer = this as? IrAnnotationContainer ?: return ICHash()
+        var symbolAnnotationsHash = icHasher.calculateIrAnnotationContainerHash(annotationContainer)
 
-        while (parentDeclaration is IrDeclaration) {
-            symbolAnnotationsHash += parentDeclaration.annotationsHash
-            parentDeclaration = parentDeclaration.parent
-        }
+        val declaration = this as? IrDeclaration
 
-        (parentDeclaration as? IrFile)?.let { symbolAnnotationsHash += it.annotationsHash }
-
-        val declaration = owner
+        (declaration?.parent as? IrSymbolOwner)?.let { symbolAnnotationsHash += it.annotationsHash }
 
         if (declaration is IrSimpleFunction) {
             declaration.correspondingPropertySymbol?.let { symbolAnnotationsHash += it.owner.annotationsHash }
@@ -109,8 +101,7 @@ internal class IdSignatureHashCalculator(private val icHasher: ICHasher) {
 
         if (declaration is IrOverridableDeclaration<*>) {
             declaration.overriddenSymbols.forEach {
-                symbolAnnotationsHash += it.calculateAnnotationHash()
-                (it.owner as? IrAnnotationContainer)?.run { symbolAnnotationsHash += annotationsHash }
+                symbolAnnotationsHash += it.owner.annotationsHash
             }
         }
 
@@ -118,7 +109,7 @@ internal class IdSignatureHashCalculator(private val icHasher: ICHasher) {
     }
 
     private fun IrSymbol.calculateSymbolHash(): ICHash {
-        return calculateAnnotationHash() + icHasher.calculateIrSymbolHash(this)
+        return owner.annotationsHash + icHasher.calculateIrSymbolHash(this)
     }
 
     private fun IrFunction.calculateInlineFunctionTransitiveHash(): ICHash {
