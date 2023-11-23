@@ -9,7 +9,6 @@ dependencies {
 
     api(project(":native:swift:sir"))
 
-    testImplementation(libs.junit4)
     testImplementation(projectTests(":compiler:tests-common"))
 }
 
