@@ -1,3 +1,6 @@
+@file:OptIn(ExperimentalObjCName::class)
+
+import kotlin.experimental.ExperimentalObjCName
 
 @kotlin.native.ObjCName("objcTopLevelFunction", "swiftTopLevelFunction")
 fun someTopLevelFunction() = ""

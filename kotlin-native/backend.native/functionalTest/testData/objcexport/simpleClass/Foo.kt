@@ -1,4 +1,4 @@
 class Foo {
     val someProperty: Int = 42
-    fun someMethod(): String
+    fun someMethod(): String = ""
 }
