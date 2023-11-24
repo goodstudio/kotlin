@@ -513,12 +513,7 @@ object FirSerializationPluginClassChecker : FirClassChecker() {
         val argsRefs = extractArgumentsTypeRefAndSource(typeRef) ?: return
         for (typeArgument in argsRefs) {
             val argTypeRef = typeArgument.typeRef ?: continue
-            val source = typeArgument.source
-            checkType(
-                argTypeRef,
-                source ?: fallbackSource,
-                reporter
-            )
+            checkType(argTypeRef, typeArgument.source ?: fallbackSource, reporter)
         }
     }
 
