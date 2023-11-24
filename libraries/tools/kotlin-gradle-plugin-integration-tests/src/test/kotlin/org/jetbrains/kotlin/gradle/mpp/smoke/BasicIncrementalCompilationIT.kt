@@ -39,7 +39,7 @@ open class BasicIncrementalCompilationIT : KmpIncrementalITBase() {
          * Step 2: touch app:jvm, no abi change
          */
 
-        val appJvmClassKt = resolvePath("app", "jvmMain", "PlainPublicClassJvm.kt").addPrivateVal()
+        val appJvmClassKt = resolvePath("app", "jvmMain", "UsedNowhereJvm.kt").addPrivateVal()
         testCase(
             incrementalPath = null, //TODO: it just doesn't print "Incremental compilation completed", why? (KT-63476)
             executedTasks = setOf(":app:compileKotlinJvm")
@@ -52,7 +52,7 @@ open class BasicIncrementalCompilationIT : KmpIncrementalITBase() {
          */
 
         testCase(
-            incrementalPath = resolvePath("app", "jsMain", "PlainPublicClassJs.kt").addPrivateVal(),
+            incrementalPath = resolvePath("app", "jsMain", "UsedNowhereJs.kt").addPrivateVal(),
             executedTasks = setOf(":app:compileKotlinJs"),
         )
 
@@ -60,7 +60,7 @@ open class BasicIncrementalCompilationIT : KmpIncrementalITBase() {
          * Step 4: touch app:native, no abi change
          */
 
-        resolvePath("app", "nativeMain", "PlainPublicClassNative.kt").addPrivateVal()
+        resolvePath("app", "nativeMain", "UsedNowhereNative.kt").addPrivateVal()
         testCase(
             incrementalPath = null, // no native incremental compilation - see KT-62824
             executedTasks = setOf(":app:compileKotlinNative"),

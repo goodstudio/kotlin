@@ -1,3 +1,3 @@
-open class PlainPublicClass {
+class PlainPublicClass {
     fun bar() = 234
 }
