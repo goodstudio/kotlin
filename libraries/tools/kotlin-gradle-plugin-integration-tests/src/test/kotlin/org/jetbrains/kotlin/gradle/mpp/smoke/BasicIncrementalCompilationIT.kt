@@ -27,7 +27,7 @@ open class BasicIncrementalCompilationIT : KmpIncrementalITBase() {
          */
 
         testCase(
-            incrementalPath = resolvePath("app", "commonMain", "PlainPublicClass.kt").addPrivateVal(),
+            incrementalPath = resolvePath("app", "commonMain", "UsedNowhere.kt").addPrivateVal(),
             executedTasks = setOf(
                 ":app:compileKotlinJvm",
                 ":app:compileKotlinJs",

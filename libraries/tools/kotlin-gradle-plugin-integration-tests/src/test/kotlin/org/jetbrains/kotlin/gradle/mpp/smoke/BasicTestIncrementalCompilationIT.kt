@@ -55,7 +55,7 @@ open class BasicTestIncrementalCompilationIT : KmpIncrementalITBase() {
          */
 
         testCase(
-            incrementalPath = resolvePath("app", "commonMain", "PlainPublicClass.kt").addPrivateVal(),
+            incrementalPath = resolvePath("app", "commonMain", "UsedNowhere.kt").addPrivateVal(),
             executedTasks = setOf(
                 ":app:compileTestKotlinJvm",
                 ":app:compileTestKotlinNative",
