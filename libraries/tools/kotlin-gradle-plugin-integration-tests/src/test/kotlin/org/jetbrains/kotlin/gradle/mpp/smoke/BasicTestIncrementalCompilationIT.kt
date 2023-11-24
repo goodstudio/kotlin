@@ -55,7 +55,7 @@ open class BasicTestIncrementalCompilationIT : KmpIncrementalITBase() {
          */
 
         testCase(
-            incrementalPath = resolvePath("app", "commonMain", "UsedNowhere.kt").addPrivateVal(),
+            incrementalPath = resolvePath("app", "commonMain", "Unused.kt").addPrivateVal(),
             executedTasks = setOf(
                 ":app:compileTestKotlinJvm",
                 ":app:compileTestKotlinNative",
@@ -70,7 +70,7 @@ open class BasicTestIncrementalCompilationIT : KmpIncrementalITBase() {
          * Step 3 - touch app/jvm, affect jvm tests in app
          */
 
-        val touchedAppJvm = resolvePath("app", "jvmMain", "UsedNowhereJvm.kt").addPrivateVal()
+        val touchedAppJvm = resolvePath("app", "jvmMain", "UnusedJvm.kt").addPrivateVal()
         testCase(
             incrementalPath = null,
             executedTasks = setOf(
@@ -86,7 +86,7 @@ open class BasicTestIncrementalCompilationIT : KmpIncrementalITBase() {
          */
 
         testCase(
-            incrementalPath = resolvePath("app", "jsMain", "UsedNowhereJs.kt").addPrivateVal(),
+            incrementalPath = resolvePath("app", "jsMain", "UnusedJs.kt").addPrivateVal(),
             executedTasks = setOf(
                 ":app:compileTestKotlinJs",
                 ":app:jsTest",
@@ -97,7 +97,7 @@ open class BasicTestIncrementalCompilationIT : KmpIncrementalITBase() {
          * Step 5 - touch app/native, affect native tests in app
          */
 
-        resolvePath("app", "nativeMain", "UsedNowhereNative.kt").addPrivateVal()
+        resolvePath("app", "nativeMain", "UnusedNative.kt").addPrivateVal()
         testCase(
             incrementalPath = null,
             executedTasks = setOf(
