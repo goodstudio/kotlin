@@ -1,3 +1,3 @@
-class UserJs {
+class AppJsUnusedClassWithDependencies {
     val line = appCommonFunForAppPlatformAndAppCommonTest()
 }

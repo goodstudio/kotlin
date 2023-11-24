@@ -1,3 +1,3 @@
-class PlainPublicClassJvm {
+class AppJvmUnusedClass {
     fun doBar() = 2
 }

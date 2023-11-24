@@ -1,1 +1,1 @@
-fun useLibJsPlatformUtil() = libJsPlatformUtil()
+fun appJsUseLibJsPlatformUtil() = libJsPlatformUtil()

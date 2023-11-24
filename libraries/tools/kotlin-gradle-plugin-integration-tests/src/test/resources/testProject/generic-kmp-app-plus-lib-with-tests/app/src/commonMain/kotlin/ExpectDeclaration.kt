@@ -1,3 +1,3 @@
-expect class Detail {
+expect class ExpectActualDetail {
     val key: String
 }

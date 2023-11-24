@@ -1,3 +1,3 @@
-class UserJvm {
+class AppJvmUnusedClassWithDependencies {
     val line = appCommonFunForAppPlatformAndAppCommonTest()
 }

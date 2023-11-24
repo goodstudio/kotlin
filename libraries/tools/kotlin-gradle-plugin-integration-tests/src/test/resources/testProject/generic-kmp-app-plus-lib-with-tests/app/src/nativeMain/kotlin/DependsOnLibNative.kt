@@ -1,1 +1,1 @@
-fun useLibNativePlatformUtil() = libNativePlatformUtil()
+fun appNativeUseLibNativePlatformUtil() = libNativePlatformUtil()

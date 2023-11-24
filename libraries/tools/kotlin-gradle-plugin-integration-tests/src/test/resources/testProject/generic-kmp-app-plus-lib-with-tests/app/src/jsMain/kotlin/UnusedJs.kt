@@ -1,3 +1,3 @@
-class PlainPublicClassJs {
+class AppJsUnusedClass {
     fun foo() = 234
 }

@@ -1,3 +1,3 @@
-class UserNative {
+class AppNativeUnusedClassWithDependencies {
     val line = appCommonFunForAppPlatformAndAppCommonTest()
 }

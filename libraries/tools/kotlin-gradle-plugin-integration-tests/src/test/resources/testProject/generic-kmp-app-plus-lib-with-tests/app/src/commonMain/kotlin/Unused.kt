@@ -1,3 +1,3 @@
-class PlainPublicClass {
+class AppCommonUnusedClass {
     fun bar() = 234
 }
