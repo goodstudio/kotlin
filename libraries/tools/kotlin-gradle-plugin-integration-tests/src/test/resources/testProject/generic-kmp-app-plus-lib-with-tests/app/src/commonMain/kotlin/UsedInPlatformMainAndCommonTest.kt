@@ -1,1 +1,1 @@
-fun sayYes() = "Yes"
+fun appCommonFunForAppPlatformAndAppCommonTest() = "Yes"

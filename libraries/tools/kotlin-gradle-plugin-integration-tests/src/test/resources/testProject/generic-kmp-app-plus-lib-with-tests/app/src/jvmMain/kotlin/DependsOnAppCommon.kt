@@ -1,3 +1,3 @@
 class UserJvm {
-    val line = sayYes()
+    val line = appCommonFunForAppPlatformAndAppCommonTest()
 }

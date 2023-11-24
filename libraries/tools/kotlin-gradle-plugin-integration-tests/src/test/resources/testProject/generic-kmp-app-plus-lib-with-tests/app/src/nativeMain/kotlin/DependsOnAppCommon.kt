@@ -1,3 +1,3 @@
 class UserNative {
-    val line = sayYes()
+    val line = appCommonFunForAppPlatformAndAppCommonTest()
 }

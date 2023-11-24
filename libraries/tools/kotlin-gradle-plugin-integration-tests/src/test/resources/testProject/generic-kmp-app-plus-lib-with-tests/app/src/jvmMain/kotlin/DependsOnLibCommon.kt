@@ -1,3 +1,3 @@
-class PricedBridgeJvm(length: Int, builder: String) : LibCommonClassForAppPlatform(length, builder) {
+class AppJvmClass(length: Int, builder: String) : LibCommonClassForAppPlatform(length, builder) {
     fun price() = length * builder.length * 300
 }

@@ -5,6 +5,6 @@ class TrivialTest {
 
     @Test
     fun sayYesSaysYes() {
-        assertEquals("Yes", sayYes())
+        assertEquals("Yes", appCommonFunForAppPlatformAndAppCommonTest())
     }
 }

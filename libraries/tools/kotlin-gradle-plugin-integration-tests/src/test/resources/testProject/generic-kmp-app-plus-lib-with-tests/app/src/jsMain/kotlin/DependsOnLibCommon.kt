@@ -1,3 +1,3 @@
-class PricedBridgeJs(length: Int, builder: String) : LibCommonClassForAppPlatform(length, builder) {
+class AppJsClass(length: Int, builder: String) : LibCommonClassForAppPlatform(length, builder) {
     fun price() = length * builder.length * 300
 }

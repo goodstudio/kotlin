@@ -1,3 +1,3 @@
 class UserJs {
-    val line = sayYes()
+    val line = appCommonFunForAppPlatformAndAppCommonTest()
 }
