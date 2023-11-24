@@ -1,7 +1,7 @@
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
-class AdvancedTest {
+class LibJvmTest {
 
     @Test
     fun jvmUtilReturns400() {
