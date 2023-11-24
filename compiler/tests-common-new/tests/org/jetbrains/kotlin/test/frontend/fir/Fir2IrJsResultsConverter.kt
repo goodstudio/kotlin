@@ -142,7 +142,7 @@ class Fir2IrJsResultsConverter(
                     components.session, metadataVersion,
                     ConstValueProviderImpl(components),
                     allowErrorTypes = false, exportKDoc = false,
-                    components.annotationsFromPluginRegistrar.createMetadataAnnotationsProvider()
+                    components.annotationsFromPluginRegistrar.createAdditionalMetadataProvider()
                 ),
                 configuration.languageVersionSettings,
             )
