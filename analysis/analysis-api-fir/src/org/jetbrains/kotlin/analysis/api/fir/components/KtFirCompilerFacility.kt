@@ -138,6 +138,8 @@ internal class KtFirCompilerFacility(
         val jvmIrDeserializer = JvmIrDeserializerImpl()
         val diagnosticReporter = DiagnosticReporterFactory.createPendingReporter()
 
+        val irGeneratorExtensions = IrGenerationExtension.getInstances(project)
+
         val dependencyFir2IrResults = dependencyFiles
             .map(::getFullyResolvedFirFile)
             .groupBy { it.llFirSession }
@@ -152,7 +154,7 @@ internal class KtFirCompilerFacility(
                 val dependencyFir2IrExtensions = JvmFir2IrExtensions(dependencyConfiguration, jvmIrDeserializer, JvmIrMangler)
                 runFir2Ir(
                     dependencySession, dependencyFiles, dependencyFir2IrExtensions,
-                    diagnosticReporter, dependencyConfiguration
+                    diagnosticReporter, dependencyConfiguration, irGeneratorExtensions
                 )
             }
 
@@ -173,17 +175,16 @@ internal class KtFirCompilerFacility(
         val targetFirFiles = targetFiles.map(::getFullyResolvedFirFile)
         val targetFir2IrResult = runFir2Ir(
             targetSession, targetFirFiles, targetFir2IrExtensions, diagnosticReporter, targetConfiguration,
+            /**
+             * IR for code fragment is not fully correct until `patchCodeFragmentIr` is over.
+             * Because of that we run IR plugins manually after patching and don't pass any extension to fir2ir conversion in `runFir2Ir` method
+             */
+            irGeneratorExtensions = emptyList()
         )
 
         patchCodeFragmentIr(targetFir2IrResult)
 
         ProgressManager.checkCanceled()
-
-        /**
-         * IR for code fragment is not fully correct until `patchCodeFragmentIr` is over.
-         * Because of that we run IR plugins manually after patching and don't pass any extension to fir2ir conversion in `runFir2Ir` method
-         */
-        val irGeneratorExtensions = IrGenerationExtension.getInstances(project)
         targetFir2IrResult.pluginContext.applyIrGenerationExtensions(targetFir2IrResult.irModuleFragment, irGeneratorExtensions)
 
         val bindingContext = NoScopeRecordCliBindingTrace().bindingContext
@@ -257,7 +258,8 @@ internal class KtFirCompilerFacility(
         firFiles: List<FirFile>,
         fir2IrExtensions: Fir2IrExtensions,
         diagnosticReporter: DiagnosticReporter,
-        effectiveConfiguration: CompilerConfiguration
+        effectiveConfiguration: CompilerConfiguration,
+        irGeneratorExtensions: List<IrGenerationExtension>
     ): Fir2IrActualizedResult {
         val fir2IrConfiguration = Fir2IrConfiguration(
             session.languageVersionSettings,
@@ -275,7 +277,7 @@ internal class KtFirCompilerFacility(
         return firResult.convertToIrAndActualize(
             fir2IrExtensions,
             fir2IrConfiguration,
-            irGeneratorExtensions = emptyList(), // IR extensions will be run later manually, see the comment in `compile` function
+            irGeneratorExtensions,
             signatureComposerForJvmFir2Ir(fir2IrConfiguration.linkViaSignatures),
             JvmIrMangler,
             FirJvmKotlinMangler(),
