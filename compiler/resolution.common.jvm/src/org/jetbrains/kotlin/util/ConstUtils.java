@@ -39,6 +39,7 @@ public class ConstUtils {
 
 // Copy of `com.intellij.psi.util.IsConstantExpressionVisitor`.
 // This copy is required to be able to handle K2 constants without triggering constant evaluation.
+// The only change is done in `visitReferenceExpression` where we check for constant expression without triggering evaluation.
 final class IsConstantExpressionVisitor extends JavaElementVisitor {
     private boolean myIsConstant;
     private final Map<PsiVariable, Boolean> varIsConst = new HashMap<>();
