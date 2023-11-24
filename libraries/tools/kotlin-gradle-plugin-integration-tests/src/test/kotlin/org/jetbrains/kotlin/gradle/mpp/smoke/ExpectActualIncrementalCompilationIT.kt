@@ -59,8 +59,8 @@ open class ExpectActualIncrementalCompilationIT : KGPBaseTest() {
         nativeProject("expect-actual-fun-or-class-ic", gradleVersion) {
             build("assemble")
 
-            val valueKtPath = kotlinSourcesDir("commonMain").resolve("Value.kt")
-            valueKtPath.replaceFirst(
+            val unusedKtPath = kotlinSourcesDir("commonMain").resolve("UsedNowhere.kt")
+            unusedKtPath.replaceFirst(
                 "val secret = 1",
                 "val secret = \"k2\""
             )
@@ -72,7 +72,7 @@ open class ExpectActualIncrementalCompilationIT : KGPBaseTest() {
                         kotlinSourcesDir("jvmMain").resolve("FooJvm.kt"),
                         kotlinSourcesDir("jsMain").resolve("FooJs.kt"),
                         kotlinSourcesDir("commonMain").resolve("Foo.kt"),
-                        valueKtPath
+                        unusedKtPath
                     ).relativizeTo(projectPath)
                 )
             }

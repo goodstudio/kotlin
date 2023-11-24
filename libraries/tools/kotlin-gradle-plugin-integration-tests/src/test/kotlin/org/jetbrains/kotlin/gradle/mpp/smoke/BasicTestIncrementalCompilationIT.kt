@@ -46,7 +46,7 @@ open class BasicTestIncrementalCompilationIT : KmpIncrementalITBase() {
          */
 
         testCase(
-            incrementalPath = resolvePath("lib", "commonMain", "UsedInLibTests.kt").addPrivateVal(),
+            incrementalPath = resolvePath("lib", "commonMain", "UsedInLibPlatformTests.kt").addPrivateVal(),
             executedTasks = mainCompileTasks,
         )
 

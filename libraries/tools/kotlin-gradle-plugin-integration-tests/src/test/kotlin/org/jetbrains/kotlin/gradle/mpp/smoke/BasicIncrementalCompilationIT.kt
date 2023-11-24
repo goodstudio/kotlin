@@ -71,7 +71,7 @@ open class BasicIncrementalCompilationIT : KmpIncrementalITBase() {
          */
 
         testCase(
-            incrementalPath = resolvePath("lib", "commonMain", "UsedInLibTests.kt").addPrivateVal(),
+            incrementalPath = resolvePath("lib", "commonMain", "UsedInLibPlatformTests.kt").addPrivateVal(),
             executedTasks = mainCompileTasks // TODO: KT-62642 - bad compile avoidance here
         )
 
@@ -92,7 +92,7 @@ open class BasicIncrementalCompilationIT : KmpIncrementalITBase() {
          */
 
         testCase(
-            incrementalPath = resolvePath("lib", "jsMain", "libJsPlatformUtil.kt").addPrivateVal(),
+            incrementalPath = resolvePath("lib", "jsMain", "UsedInAppJsAndLibTests.kt").addPrivateVal(),
             executedTasks = setOf(":app:compileKotlinJs", ":lib:compileKotlinJs"),
         )
 
