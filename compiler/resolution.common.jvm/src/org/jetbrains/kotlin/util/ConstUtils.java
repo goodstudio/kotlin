@@ -7,12 +7,13 @@ package org.jetbrains.kotlin.util;
 
 import com.intellij.psi.*;
 import com.intellij.psi.impl.compiled.ClsFieldImpl;
+import com.intellij.psi.impl.java.stubs.PsiFieldStub;
 import com.intellij.psi.impl.source.PsiFieldImpl;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.util.TypeConversionUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.jetbrains.kotlin.load.java.structure.impl.JavaFieldImpl;
+import org.jetbrains.kotlin.load.java.structure.impl.NotEvaluatedConstAware;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -165,7 +166,8 @@ final class IsConstantExpressionVisitor extends JavaElementVisitor {
 
         // This block is the only difference with the original `IsConstantExpressionVisitor`
         if (variable instanceof ClsFieldImpl) {
-            if (((ClsFieldImpl) variable).getStub().getInitializerText() == JavaFieldImpl.NOT_YET_EVALUATED_CONST) {
+            PsiFieldStub stub = ((ClsFieldImpl) variable).getStub();
+            if (stub instanceof NotEvaluatedConstAware && ((NotEvaluatedConstAware) stub).isNotYetComputed()) {
                 myIsConstant = true;
                 varIsConst.put(variable, Boolean.TRUE);
                 return;

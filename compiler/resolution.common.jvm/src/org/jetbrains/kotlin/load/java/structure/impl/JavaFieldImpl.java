@@ -32,8 +32,6 @@ public class JavaFieldImpl extends JavaMemberImpl<PsiField> implements JavaField
         super(psiFieldSource);
     }
 
-    public static final String NOT_YET_EVALUATED_CONST = ";NOT_YET_EVALUATED_CONST;";
-
     @SuppressWarnings("unused") // used in KSP
     public JavaFieldImpl(PsiField psiField) {
         this(JavaElementSourceFactory.getInstance(psiField.getProject()).createPsiSource(psiField));
