@@ -1,3 +1,3 @@
-fun tellAge() {
-    println("you're ${compute()} years old!")
+fun commonMainFunDependingOnLibCommon() {
+    println("you're ${libCommonFunForAppCommon()} years old!")
 }

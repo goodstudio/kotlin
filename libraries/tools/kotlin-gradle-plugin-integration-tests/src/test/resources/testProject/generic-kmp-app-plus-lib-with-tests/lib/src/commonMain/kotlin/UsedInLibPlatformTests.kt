@@ -1,3 +1,3 @@
-fun multiplyByTwo(n: Int): Int {
+fun libCommonFunForLibPlatformTests(n: Int): Int {
     return n * 2
 }

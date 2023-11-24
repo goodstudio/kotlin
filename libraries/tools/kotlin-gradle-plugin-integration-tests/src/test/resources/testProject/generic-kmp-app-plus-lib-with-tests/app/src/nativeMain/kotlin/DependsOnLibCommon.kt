@@ -1,3 +1,3 @@
-class PricedBridgeNative(length: Int, builder: String) : Bridge(length, builder) {
+class PricedBridgeNative(length: Int, builder: String) : LibCommonClassForAppPlatform(length, builder) {
     fun price() = length * builder.length * 300
 }

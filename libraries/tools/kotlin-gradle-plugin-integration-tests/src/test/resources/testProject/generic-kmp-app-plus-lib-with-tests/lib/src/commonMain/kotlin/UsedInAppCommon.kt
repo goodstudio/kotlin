@@ -1,1 +1,1 @@
-fun compute() = Double.NaN
+fun libCommonFunForAppCommon() = Double.NaN
