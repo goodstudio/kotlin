@@ -66,21 +66,6 @@ abstract class KmpIncrementalITBase : KGPBaseTest() {
         }
     }
 
-    // useful for smokes, where multiple different changes are expected to trigger the same compilations
-    protected open fun TestProject.multiStepTestCase(
-        executedTasks: Set<String>,
-        steps: List<() -> Unit>,
-        commonAssertions: BuildResult.() -> Unit = {}
-    ) {
-        for (step in steps) {
-            step()
-            build(gradleTask, buildOptions = defaultBuildOptions.copy(logLevel = LogLevel.DEBUG)) {
-                assertSuccessOrUTD(allTasks = mainCompileTasks, executedTasks = executedTasks)
-                commonAssertions()
-            }
-        }
-    }
-
     companion object {
         private val changeCounter = AtomicInteger(0)
     }
