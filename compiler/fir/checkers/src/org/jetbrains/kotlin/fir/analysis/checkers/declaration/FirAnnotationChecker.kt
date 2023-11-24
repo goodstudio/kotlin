@@ -29,7 +29,6 @@ import org.jetbrains.kotlin.fir.resolve.fqName
 import org.jetbrains.kotlin.fir.resolve.fullyExpandedType
 import org.jetbrains.kotlin.fir.types.*
 import org.jetbrains.kotlin.name.FqName
-import org.jetbrains.kotlin.name.SpecialNames
 import org.jetbrains.kotlin.name.StandardClassIds
 import kotlin.contracts.ExperimentalContracts
 import kotlin.contracts.contract
@@ -170,26 +169,6 @@ object FirAnnotationChecker : FirBasicDeclarationChecker() {
 
             val useSiteMapping = KotlinTarget.USE_SITE_MAPPING[useSiteTarget]
             return actualTargets.onlyWithUseSiteTarget.any { it in applicableTargets && it == useSiteMapping }
-        }
-
-        if (declaration is FirProperty && declaration.name == SpecialNames.DESTRUCT) {
-            reporter.reportOn(
-                annotation.source,
-                FirErrors.WRONG_ANNOTATION_TARGET,
-                "destructuring declaration",
-                context
-            )
-            return
-        }
-
-        if (declaration is FirAnonymousInitializer) {
-            reporter.reportOn(
-                annotation.source,
-                FirErrors.WRONG_ANNOTATION_TARGET,
-                "anonymous initializer",
-                context
-            )
-            return
         }
 
         if (useSiteTarget != null) {

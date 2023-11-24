@@ -34,8 +34,13 @@ import org.jetbrains.kotlin.resolve.checkers.OptInNames
 
 private val defaultAnnotationTargets = KotlinTarget.DEFAULT_TARGET_SET
 
+private val annotationTargetsOnErrorAnnotation: Set<KotlinTarget> = KotlinTarget.entries.toMutableSet().apply {
+    remove(KotlinTarget.INITIALIZER)
+    remove(KotlinTarget.DESTRUCTURING_DECLARATION)
+}
+
 fun FirAnnotation.getAllowedAnnotationTargets(session: FirSession): Set<KotlinTarget> {
-    if (annotationTypeRef is FirErrorTypeRef) return KotlinTarget.values().toSet()
+    if (annotationTypeRef is FirErrorTypeRef) return annotationTargetsOnErrorAnnotation
     val annotationClassSymbol = (this.annotationTypeRef.coneType as? ConeClassLikeType)
         ?.fullyExpandedType(session)?.lookupTag?.toSymbol(session) ?: return defaultAnnotationTargets
     annotationClassSymbol.lazyResolveToPhase(FirResolvePhase.BODY_RESOLVE)
@@ -70,7 +75,7 @@ fun FirClassLikeSymbol<*>.getAllowedAnnotationTargets(session: FirSession): Set<
             //but `JvmStubBasedFirDeserializedSymbolProvider` which works in IDE over stubs, misses classes   
                 ?: (calleeReference as? FirFromMissingDependenciesNamedReference)?.name?.asString()
                 ?: return@mapNotNullTo null
-        KotlinTarget.values().firstOrNull { target -> target.name == targetName }
+        KotlinTarget.entries.firstOrNull { target -> target.name == targetName }
     }
 }
 
