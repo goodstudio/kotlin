@@ -11,39 +11,26 @@ import java.io.File
 import java.nio.file.Files
 
 /**
- * Abstract class representing an executor for XCTest tests.
+ * An abstract class representing a local execution of XCTest tests.
  *
  * This class is a composable executor that relies on the underlying [Executor].
+ * It is able to run xctest on the local host passing arguments as a key-value
+ * to the Info.plist file
  *
  * @property configurables The Apple target to be run on.
- * @property executor The underlying executor to execute target specific operations.
+ * @property executor The underlying executor to execute target-specific operations.
  */
 abstract class AbstractXCTestExecutor(
     private val configurables: AppleConfigurables,
-    private val executor: Executor
+    private val executor: Executor,
 ) : Executor {
     private val hostExecutor = HostExecutor()
 
     private val target by configurables::target
 
-    companion object {
-        fun availableFor(configurables: AppleConfigurables): Boolean =
-            HostManager.host is KonanTarget.MACOS_ARM64 || configurables.target is KonanTarget.MACOS_X64
-
-        fun supportedTargets(): List<KonanTarget> = when (HostManager.host) {
-            KonanTarget.MACOS_X64 -> listOf(KonanTarget.MACOS_X64, KonanTarget.IOS_X64)
-            KonanTarget.MACOS_ARM64 -> listOf(KonanTarget.MACOS_ARM64, KonanTarget.IOS_SIMULATOR_ARM64)
-            else -> error("${HostManager.host} isn't supported by XCTestExecutor")
-        }
-    }
-
     init {
-        require(availableFor(configurables)) {
+        require(HostManager.host.family.isAppleFamily) {
             "$this executor isn't available for $configurables"
-        }
-
-        require(configurables.target in supportedTargets()) {
-            "$this executor is unable to run ${configurables.target}"
         }
     }
 
@@ -88,7 +75,7 @@ abstract class AbstractXCTestExecutor(
             val infoPlist = newBundleFile.walk()
                 .firstOrNull { it.name == "Info.plist" }
                 ?.absolutePath
-            checkNotNull(infoPlist) { "Info.plist of xctest-bundle wasn't found. Check the bundle contents and location "}
+            checkNotNull(infoPlist) { "Info.plist of xctest-bundle wasn't found. Check the bundle contents and location " }
 
             val writeArgsRequest = ExecuteRequest(
                 executableAbsolutePath = "/usr/libexec/PlistBuddy",
@@ -125,15 +112,35 @@ abstract class AbstractXCTestExecutor(
  * XCTest executor that runs tests on a host machine.
  * It extends [AbstractXCTestExecutor] and uses [HostExecutor] to handle host-specific execution.
  *
- * @param configurables a test execution target.
+ * @param configurables a test execution target configurables.
  */
-class XCTestHostExecutor(configurables: AppleConfigurables) : AbstractXCTestExecutor(configurables, HostExecutor())
+class XCTestHostExecutor(configurables: AppleConfigurables) : AbstractXCTestExecutor(configurables, HostExecutor()) {
+    init {
+        require(configurables.target in supportedTargets()) {
+            "$this executor is unable to run ${configurables.target}"
+        }
+    }
+
+    private fun supportedTargets(): List<KonanTarget> = listOf(HostManager.host)
+}
 
 /**
  * XCTest executor that runs tests on simulators on a host machine.
  * It extends [AbstractXCTestExecutor] and uses [XcodeSimulatorExecutor] to handle simulator-specific operations.
  *
- * @param configurables a test execution target.
+ * @param configurables a test execution target configurables.
  */
 class XCTestSimulatorExecutor(configurables: AppleConfigurables) :
-    AbstractXCTestExecutor(configurables, XcodeSimulatorExecutor(configurables))
+    AbstractXCTestExecutor(configurables, XcodeSimulatorExecutor(configurables)) {
+    init {
+        require(configurables.target in supportedTargets()) {
+            "$this executor is unable to run ${configurables.target}"
+        }
+    }
+
+    private fun supportedTargets(): List<KonanTarget> = when (HostManager.host) {
+        KonanTarget.MACOS_X64 -> listOf(KonanTarget.IOS_X64)
+        KonanTarget.MACOS_ARM64 -> listOf(KonanTarget.IOS_SIMULATOR_ARM64)
+        else -> emptyList()
+    }
+}
