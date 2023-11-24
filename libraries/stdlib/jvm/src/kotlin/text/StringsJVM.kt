@@ -330,7 +330,7 @@ public actual inline fun String.toCharArray(
  * using the default locale.
  *
  * See [java.util.Formatter] class documentation
- * for the syntax of available format specifiers that can be used in the format string.
+ * for the syntax of format specifiers for the format string.
  *
  * @sample samples.text.Strings.formatExtension
  */
@@ -343,7 +343,7 @@ public inline fun String.format(vararg args: Any?): String = java.lang.String.fo
  * using the default locale.
  *
  * See [java.util.Formatter] class documentation
- * for the syntax of available format specifiers that can be used in the format string.
+ * for the syntax of format specifiers for the format string.
  *
  * @sample samples.text.Strings.formatStatic
  */
@@ -356,7 +356,7 @@ public inline fun String.Companion.format(format: String, vararg args: Any?): St
  * using the specified locale. If [locale] is `null` then no localization is applied.
  *
  * See [java.util.Formatter] class documentation
- * for the syntax of available format specifiers that can be used in the format string.
+ * for the syntax of format specifiers for the format string.
  *
  * @sample samples.text.Strings.formatWithLocaleExtension
  */
@@ -370,7 +370,7 @@ public inline fun String.format(locale: Locale?, vararg args: Any?): String = ja
  * using the specified locale. If [locale] is `null` then no localization is applied.
  *
  * See [java.util.Formatter] class documentation
- * for the syntax of available format specifiers that can be used in the format string.
+ * for the syntax of format specifiers for the format string.
  *
  * @sample samples.text.Strings.formatWithLocaleStatic
  */
